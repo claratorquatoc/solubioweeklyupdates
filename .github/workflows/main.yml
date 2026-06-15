@@ -1,0 +1,5 @@
+solubioweeklyupdates/
+├── index.html
+└── .github/
+    └── workflows/
+        └── save.yml
