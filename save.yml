@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: Save to Gist
         env:
-          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
-          GIST_ID: ${{ secrets.GIST_ID }}
+          GIST_TOKEN: 11CAGKWPI0gLlnT8kymoba_hU45w3a3EfqS37sQZg6ue6CO6AsXrvNV2lXCG4LmjwCWUR66D4IYEGcCa6w
+          GIST_ID: 3fbfbda72d77e086968b28c20c423e0d
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
         run: |
           echo "$PAYLOAD" > /tmp/data.json
