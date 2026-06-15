@@ -21,3 +21,4 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"files\":{\"solubio.json\":{\"content\":$(jq -Rs . /tmp/data.json)}}}" \
             "https://api.github.com/gists/$GIST_ID"
+
