@@ -406,6 +406,17 @@
       "current": "Call realizado na última semana com CMC para que eles possam elaborar minuta para realização de aporte de capital",
       "next": "Envio deve ser feito essa semana",
       "comments": ""
+    },
+    {
+      "id": "NEW-1782161858408",
+      "cat": "Bicycle",
+      "title": "Discussão comercial BV e Raíx",
+      "owner": "Aqua Team",
+      "deadline": "Imediato",
+      "status": "Em andamento",
+      "current": "Discussão comercial a ser agendada",
+      "next": "",
+      "comments": ""
     }
   ],
   "__overview": {
