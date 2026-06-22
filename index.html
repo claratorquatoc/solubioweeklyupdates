@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Solubio Weekly Update</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#EEF2F4;font-family:'DM Sans',system-ui,sans-serif;color:#1A1A1A}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CCD8DE;border-radius:3px}
+#header{background:#003D4C;padding:18px 32px}
+#header-inner{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.stat-box{background:rgba(255,255,255,.07);border:1px solid rgba(170,190,200,.15);border-radius:10px;padding:7px 14px;text-align:center;min-width:64px}
+.stat-box .n{font-size:18px;font-weight:700;color:#fff;line-height:1}
+.stat-box .lbl{font-size:10px;color:rgba(170,190,200,0.6);margin-top:2px;white-space:nowrap}
+#btn-new{background:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:600;color:#003D4C;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+#sync-status{font-size:11px;padding:5px 11px;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:5px}
+.date-wrap{display:flex;align-items:center;gap:6px;cursor:pointer}
+.date-display{color:rgba(170,190,200,0.75);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;font-weight:500;border-bottom:1px dashed rgba(170,190,200,0.3);padding-bottom:1px}
+.date-edit-icon{color:rgba(170,190,200,0.4);font-size:10px}
+.date-input-wrap{display:none}
+.date-input-wrap input{background:rgba(255,255,255,.1);border:1px solid rgba(170,190,200,.3);border-radius:6px;color:#fff;font-size:11px;padding:3px 8px;font-family:'DM Sans',sans-serif;outline:none}
+#tabs{background:#fff;border-bottom:1px solid #CCD8DE;overflow-x:auto}
+#tabs-inner{max-width:1120px;margin:0 auto;padding:0 32px;display:flex}
+.tab{padding:13px 15px;font-size:12px;font-weight:400;color:#999;background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.tab.active{font-weight:600;color:#003D4C;border-bottom-color:#003D4C}
+#filters{max-width:1120px;margin:0 auto;padding:18px 32px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.filter-btns{display:flex;gap:8px;flex-wrap:wrap}
+.fbtn{padding:7px 16px;border-radius:24px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #CCD8DE;background:#fff;color:#555;font-family:'DM Sans',sans-serif}
+#search{padding:8px 14px;border:1.5px solid #CCD8DE;border-radius:24px;font-size:12px;outline:none;width:200px;background:#fff;font-family:'DM Sans',sans-serif}
+#grid-wrap{max-width:1120px;margin:0 auto;padding:14px 32px 48px}
+#count{font-size:11px;color:#999;margin-bottom:14px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:#fff;border-radius:10px;cursor:pointer;border:1px solid #CCD8DE;border-left:4px solid #003D4C;display:flex;flex-direction:column;transition:box-shadow .15s}
+.card:hover{box-shadow:0 6px 20px rgba(0,61,76,.10)}
+.card-top{padding:15px 17px 11px}
+.card-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.card-cat{font-size:10px;font-weight:700;color:#003D4C;text-transform:uppercase;letter-spacing:.5px}
+.card-title{font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:7px;line-height:1.4}
+.card-current{font-size:12px;color:#555;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-next{margin:0 17px 11px;border-radius:7px;padding:7px 11px;background:#EEF2F4;border-left:3px solid #CCD8DE}
+.card-next-lbl{font-size:10px;font-weight:700;color:#64828C;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.card-next-txt{font-size:11px;color:#555;line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{margin-top:auto;padding:9px 17px 12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #EEF2F4}
+.card-owner{font-size:11px;color:#64828C}
+.card-foot-right{display:flex;gap:6px;align-items:center}
+.deadline-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:#EEF2F4;color:#64828C;border:1px solid #CCD8DE}
+.edit-btn{background:none;border:1px solid #CCD8DE;border-radius:6px;padding:3px 8px;font-size:11px;color:#64828C;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.pill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+#overview-wrap{max-width:1120px;margin:0 auto;padding:24px 32px 48px;display:none}
+.ov-body{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+@media(max-width:900px){.ov-body{grid-template-columns:1fr}}
+.cat-progress-item{margin-bottom:8px;padding:10px 12px;border-radius:8px;border:1.5px solid transparent}
+.cat-progress-item.has-priority{border-color:#93C5FD;background:#F0F7FF}
+.cat-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.cat-progress-name{font-size:12px;font-weight:600;color:#1A1A1A;display:flex;align-items:center;gap:6px}
+.cat-priority-dot{width:7px;height:7px;border-radius:50%;background:#3B82F6;flex-shrink:0}
+.cat-progress-counts{font-size:11px;color:#64828C}
+.cat-progress-bar{height:5px;background:#EEF2F4;border-radius:3px;overflow:hidden}
+.cat-progress-fill{height:100%;background:linear-gradient(90deg,#003D4C,#006077);border-radius:3px}
+.cat-progress-item.has-priority .cat-progress-fill{background:linear-gradient(90deg,#1D4ED8,#3B82F6)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:#fff;border-radius:12px;border:1px solid #CCD8DE;padding:20px 22px;position:relative}
+.kpi-card.accent-navy{border-top:3px solid #1B4F8A}.kpi-card.accent-blue{border-top:3px solid #006077}
+.kpi-card.accent-teal{border-top:3px solid #003D4C}.kpi-card.accent-sky{border-top:3px solid #0284C7}
+.kpi-label{font-size:10px;font-weight:700;color:#64828C;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.kpi-value-wrap{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+.kpi-value{font-size:28px;font-weight:700;line-height:1;outline:none;min-width:20px;cursor:text;border-bottom:1px dashed transparent}
+.kpi-value:hover{border-bottom-color:#CCD8DE}.kpi-value:focus{border-bottom-color:#003D4C}
+.kpi-card.accent-navy .kpi-value{color:#1B4F8A}.kpi-card.accent-blue .kpi-value{color:#006077}
+.kpi-card.accent-teal .kpi-value{color:#003D4C}.kpi-card.accent-sky .kpi-value{color:#0284C7}
+.kpi-sub{font-size:12px;color:#999}
+.kpi-edit-hint{position:absolute;top:10px;right:10px;font-size:9px;color:#CCD8DE;opacity:0}
+.kpi-card:hover .kpi-edit-hint{opacity:1}
+.ov-section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ov-section-title{font-size:11px;font-weight:700;color:#64828C;text-transform:uppercase;letter-spacing:1.2px}
+.ov-section-line{flex:1;height:1px;background:#CCD8DE}
+.priority-item{background:#fff;border:1px solid #CCD8DE;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.priority-num{width:26px;height:26px;border-radius:7px;background:#003D4C;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.priority-text{font-size:13px;font-weight:500;color:#1A1A1A;outline:none;flex:1;cursor:text;border-bottom:1px dashed transparent;min-width:0}
+.priority-text:hover{border-bottom-color:#CCD8DE}.priority-text:focus{border-bottom-color:#003D4C}
+.priority-cat-select{border:1px solid #CCD8DE;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:600;color:#003D4C;background:#EEF2F4;cursor:pointer;outline:none;font-family:'DM Sans',sans-serif;flex-shrink:0;max-width:110px}
+.priority-del{background:none;border:none;color:#CCD8DE;cursor:pointer;font-size:14px;padding:0 3px;opacity:0;flex-shrink:0}
+.priority-item:hover .priority-del{opacity:1}.priority-del:hover{color:#A02B1A}
+.add-priority-btn{border:1.5px dashed #CCD8DE;border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-size:12px;color:#999;background:none;width:100%;font-family:'DM Sans',sans-serif;margin-top:6px}
+.add-priority-btn:hover{border-color:#003D4C;color:#003D4C}
+.overlay{position:fixed;inset:0;background:rgba(0,20,28,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,30,40,.25);border-top:4px solid #003D4C}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid #EEF2F4;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-close{background:#EEF2F4;border:none;color:#999;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;flex-shrink:0}
+.modal-body{padding:18px 24px 24px}
+.modal-section{margin-bottom:14px}
+.modal-section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.modal-section-val{background:#EEF2F4;border:1px solid #CCD8DE;border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.75;white-space:pre-line}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+.btn-primary{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;background:#003D4C;color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-danger{padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;background:none;color:#A02B1A;border:1.5px solid #F4A99A;cursor:pointer;font-family:'DM Sans',sans-serif}
+.form-modal{max-width:520px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.form-full{grid-column:1/-1}
+.form-field{margin-bottom:12px}
+.form-label{font-size:11px;font-weight:700;color:#64828C;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:4px}
+.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid #CCD8DE;border-radius:8px;padding:8px 11px;font-size:13px;color:#1A1A1A;font-family:'DM Sans',sans-serif;outline:none;background:#fff}
+.form-textarea{resize:vertical}
+.form-actions{display:flex;gap:10px;margin-top:10px}
+.btn-cancel{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;background:#EEF2F4;color:#555;border:1px solid #CCD8DE;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-save{flex:2;padding:10px;border-radius:8px;font-size:13px;font-weight:600;color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.confirm-modal{max-width:360px;padding:28px 30px;text-align:center}
+.confirm-icon{font-size:32px;margin-bottom:12px}
+.confirm-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.confirm-desc{font-size:13px;color:#555;margin-bottom:22px;line-height:1.6}
+.confirm-actions{display:flex;gap:10px}
+.btn-confirm-del{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;background:#A02B1A;color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.export-hint{background:#FFFBEA;border:1px solid #F4D166;border-radius:10px;padding:12px 16px;font-size:12px;color:#92700A;margin-bottom:20px;line-height:1.6;display:none}
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div id="header">
+  <div id="header-inner">
+    <div class="logo-wrap">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAv0AAAHFCAYAAABhB0ZJAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAEAAElEQVR42uz9d9Bk2XnfeX6PuSbN68q7Ltfeog28bTiCIAASkJYSnajZlY3Rxk5IEdrdkf7ZiTEbM1KsFDOzu9JqN2JmxBlJFI1IEfQkSACEaQAN176rXXVXl729monvvOewME0FbCfkbAozz0vqzWZqRC1QFJ4wM5wD+aXvDc9zM+99zr3vqdmTACA7CTYjofpyKEY3VV5GofYwLfQRm9hlGzABBjQXrJgYRSAxNJBLDQE2gUMfHJ3wL5OFmABh3hkQyJDMmM2YKwTCx1FBLqEsAFwjGNcAQbWMQxAVrYRPHHF5oQAAA1JCBjL2SCfo3lZQiFSCQGGggwAGcc8w2HwSCdHTBzqDc1nIcS+nWp4VFAMlYA8sFhsGPSWVTuTHbqHCsWFwIPS+UWp0eFkAsa9UsFxsGPSGVTuTHbqHCsWFwIPS+UWp0eFkAsa9UsFxsGPYAVADjALPNAhN0sj0Q5sX8Xb/wEUcfMdBZJYSeNwAAAABJRU5ErkJggg==" style="height:38px;width:auto;object-fit:contain" alt="Solubio"/>
+      <div style="width:1px;height:32px;background:rgba(170,190,200,0.2);margin:0 6px"></div>
+      <span style="font-size:10px;color:rgba(170,190,200,0.6);font-weight:500;letter-spacing:1.5px;text-transform:uppercase">Weekly Update</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div class="date-wrap" id="date-wrap" onclick="toggleDateEdit()">
+        <span class="date-display" id="date-display">16 JUN 2026</span>
+        <span class="date-edit-icon">✎</span>
+      </div>
+      <div class="date-input-wrap" id="date-input-wrap">
+        <input type="text" id="date-input" placeholder="ex: 16 JUN 2026" onblur="saveDateEdit()" onkeydown="if(event.key==='Enter')saveDateEdit()"/>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stat-box"><div class="n" id="s-total">0</div><div class="lbl">Total</div></div>
+      <div class="stat-box"><div class="n" id="s-and">0</div><div class="lbl">Em andamento</div></div>
+      <div class="stat-box"><div class="n" id="s-conc">0</div><div class="lbl">Concluídos</div></div>
+      <div class="stat-box"><div class="n" id="s-hold">0</div><div class="lbl">On Hold</div></div>
+      <div id="sync-status" style="background:rgba(46,174,106,.15);color:#1A6B3C">✓ Pronto</div>
+      <button onclick="saveGlobal()" style="background:#2EAE6A;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:7px 13px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;">Salvar para todos</button>
+      <button onclick="exportJSON()" style="background:rgba(255,255,255,.1);border:1px solid rgba(170,190,200,.25);border-radius:10px;padding:7px 13px;font-size:11px;font-weight:600;color:rgba(200,220,230,.85);cursor:pointer;">⬇ Exportar JSON</button>
+      <label style="background:rgba(255,255,255,.1);border:1px solid rgba(170,190,200,.25);border-radius:10px;padding:7px 13px;font-size:11px;font-weight:600;color:rgba(200,220,230,.85);cursor:pointer;">⬆ Importar JSON<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"/></label>
+      <button id="btn-new" onclick="openNew()">+ Novo item</button>
+    </div>
+  </div>
+</div>
+
+<div id="tabs"><div id="tabs-inner"></div></div>
+<div id="filters"><div class="filter-btns" id="filter-btns"></div><input id="search" placeholder="Buscar…" oninput="render()"/></div>
+
+<div id="overview-wrap">
+  <div class="export-hint" id="export-hint">
+    💡 <strong>Como atualizar para todos:</strong> edite o que precisar e clique <strong>Salvar para todos</strong>. Se preferir, ainda dá para exportar o <code>data.json</code> e subir manualmente no GitHub.
+  </div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <div class="ov-body">
+    <div>
+      <div class="ov-section-header"><span class="ov-section-title">Key Priorities</span><div class="ov-section-line"></div></div>
+      <div id="key-priorities-grid"></div>
+      <button class="add-priority-btn" onclick="addPriority()">+ Adicionar prioridade</button>
+    </div>
+    <div>
+      <div class="ov-section-header"><span class="ov-section-title">Por Categoria</span><div class="ov-section-line"></div></div>
+      <div id="cat-progress"></div>
+    </div>
+  </div>
+</div>
+
+<div id="grid-wrap"><div id="count"></div><div id="grid"></div></div>
+
+<!-- VIEW MODAL -->
+<div class="overlay" id="view-overlay" style="display:none" onclick="closeView(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div style="flex:1;padding-right:12px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <span style="font-size:10px;color:#003D4C;font-weight:700;text-transform:uppercase;letter-spacing:.5px" id="v-cat"></span>
+          <span style="font-size:10px;color:#999;font-family:monospace" id="v-id"></span>
+          <span id="v-pill"></span>
+        </div>
+        <div style="font-size:18px;font-weight:700;color:#003D4C;line-height:1.3" id="v-title"></div>
+        <div style="display:flex;gap:14px;margin-top:12px;align-items:center">
+          <span style="font-size:12px;color:#64828C">Responsável: <b id="v-owner"></b></span>
+          <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;background:#EEF2F4;color:#64828C;border:1px solid #CCD8DE" id="v-deadline"></span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('view-overlay').style.display='none'">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section"><div class="modal-section-lbl" style="color:#003D4C">Situação Atual</div><div class="modal-section-val" id="v-current"></div></div>
+      <div class="modal-section" id="v-next-wrap"><div class="modal-section-lbl" style="color:#64828C">Próximos Passos</div><div class="modal-section-val" id="v-next"></div></div>
+      <div class="modal-section" id="v-comments-wrap"><div class="modal-section-lbl" style="color:#64828C">Comentários</div><div class="modal-section-val" id="v-comments"></div></div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="openEditFromView()">Editar item</button>
+        <button class="btn-danger" onclick="confirmDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-overlay" style="display:none">
+  <div class="modal form-modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div style="font-size:17px;font-weight:700;color:#003D4C" id="form-title-lbl">Novo item</div>
+      <button class="modal-close" onclick="document.getElementById('edit-overlay').style.display='none'">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="f-id"/>
+      <div class="form-grid">
+        <div class="form-field form-full"><label class="form-label">Título *</label><input class="form-input" id="f-title"/></div>
+        <div class="form-field"><label class="form-label">Categoria</label><select class="form-select" id="f-cat"></select></div>
+        <div class="form-field"><label class="form-label">Status</label><select class="form-select" id="f-status"><option>Em andamento</option><option>Concluído</option><option>On Hold</option></select></div>
+        <div class="form-field"><label class="form-label">Responsável *</label><input class="form-input" id="f-owner"/></div>
+        <div class="form-field"><label class="form-label">Prazo</label><input class="form-input" id="f-deadline"/></div>
+      </div>
+      <div class="form-field"><label class="form-label">Situação Atual *</label><textarea class="form-textarea" id="f-current" rows="3"></textarea></div>
+      <div class="form-field"><label class="form-label">Próximos Passos</label><textarea class="form-textarea" id="f-next" rows="2"></textarea></div>
+      <div class="form-field"><label class="form-label">Comentários</label><textarea class="form-textarea" id="f-comments" rows="2"></textarea></div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="document.getElementById('edit-overlay').style.display='none'">Cancelar</button>
+        <button class="btn-save" id="btn-save" onclick="saveItem()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="overlay" id="confirm-overlay" style="display:none" onclick="closeConfirm(event)">
+  <div class="modal confirm-modal" onclick="event.stopPropagation()">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Excluir item?</div>
+    <div class="confirm-desc">Essa ação não poderá ser desfeita.</div>
+    <div class="confirm-actions">
+      <button class="btn-cancel" onclick="document.getElementById('confirm-overlay').style.display='none'">Cancelar</button>
+      <button class="btn-confirm-del" onclick="deleteItem()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL SAVE CONFIG -->
+<div class="overlay" id="global-overlay" style="display:none" onclick="closeGlobalConfig(event)">
+  <div class="modal form-modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div style="font-size:17px;font-weight:700;color:#003D4C">Salvar para todos</div>
+      <button class="modal-close" onclick="document.getElementById('global-overlay').style.display='none'">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="export-hint" style="display:block">
+        Configure o repositorio uma vez. O token fica salvo apenas neste navegador e precisa ter permissao de escrita no repositorio.
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label class="form-label">GitHub owner</label><input class="form-input" id="g-owner"/></div>
+        <div class="form-field"><label class="form-label">Repositorio</label><input class="form-input" id="g-repo"/></div>
+        <div class="form-field"><label class="form-label">Branch</label><input class="form-input" id="g-branch"/></div>
+        <div class="form-field"><label class="form-label">Arquivo JSON</label><input class="form-input" id="g-path"/></div>
+        <div class="form-field form-full"><label class="form-label">Token GitHub</label><input class="form-input" id="g-token" type="password" autocomplete="off"/></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="document.getElementById('global-overlay').style.display='none'">Cancelar</button>
+        <button class="btn-save" style="background:#003D4C" onclick="saveGlobalConfigFromForm()">Salvar e publicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATS=["Bicycle","Societário","Pessoas","Daily Ops","Project Fitbit","Co-Investment","Outros"];
+const STATUS_META={"Em andamento":{bg:"#EFF6FF",color:"#1D4ED8",border:"#93C5FD",dot:"#3B82F6"},"Concluído":{bg:"#EDFAF3",color:"#1A6B3C",border:"#7DDBA8",dot:"#2EAE6A"},"On Hold":{bg:"#FEF0EE",color:"#A02B1A",border:"#F4A99A",dot:"#DB521D"}};
+const DEFAULT_DATA=[{"id":"1.2","cat":"Bicycle","title":"Legal Docs","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Os principais termos do SPA/SHA da transação estão substancialmente alinhados, e ambas as partes estão atualmente preparando os respectivos anexos.\nReunião com AZ/TZ e os assessores jurídicos realizada dia 26 de maio, para discutir as cláusulas de non-compete de AZ e finalizar os termos remanescentes da documentação definitiva","next":"","comments":""},{"id":"1.3","cat":"Bicycle","title":"Biotecland","owner":"RB / JV","deadline":"Imediato","status":"Em andamento","current":"Aquisição de participação do Túlio realizada, ações integralizadas a companhia","next":"Compra da parte restante não foi aceita, novas conversas a serem introduzidas.","comments":"Necessidade de montar um material comprovando que já foram investidos mais de R$ 1,4 milhão na Biotechland, considerando aportes anteriores e investimentos/subsídios feitos via Solubio. O objetivo é ter backup caso surja discussão contratual, em data mais próxima ao vencimento"},{"id":"2.1","cat":"Societário","title":"Mútuos — Antecipação do Vencimento","owner":"RB","deadline":"Imediato","status":"On Hold","current":"Alber declarou vencimento antecipado do mútuo","next":"","comments":""},{"id":"2.2","cat":"Societário","title":"Alessandro — Liberação de Garantias","owner":"RB / Ernesto / Evelin","deadline":"Q4","status":"On Hold","current":"Necessário discutir com Crazistas a possibilidade de liberação das garantias.","next":"","comments":"Verena indicou que é possível, mas improvável sem um desembolso relevante de caixa."},{"id":"2.3","cat":"Societário","title":"Maurício — Non-Compete","owner":"RB / Jurídico","deadline":"Imediato","status":"Em andamento","current":"Mauricio adicionou ao processo as parcelas de maio e junho","next":"Definir se iremos liberar do non-compete ou negociar em conjunto com eventual aquisição","comments":""},{"id":"3.4","cat":"Pessoas","title":"Metas 2026","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Metas revisadas junto a Claudia, discussão futura a ser realizada junto a Andre","next":"Companhia deve retornar com revisão das metas e adequação ao discutido em reunião em 03/06","comments":""},{"id":"4.1","cat":"Daily Ops","title":"Monitoramento FC","owner":"RB / VMR","deadline":"—","status":"Em andamento","current":"Caixa em 12/06: R$20.8m \nFornecedores bloqueados: R$0m.\nDeve haver R$2.0m que não foram pagos em 30/05, mas não configuram inadimplência, apenas serão pagos em momento posterior\nLiquidez de curto prazo condicionada à aprovação do BB até 13/07.","next":"","comments":""},{"id":"4.2","cat":"Daily Ops","title":"AFAC","owner":"Aqua Team","deadline":"—","status":"Em andamento","current":"Aporte de ~R$5m realizado no dia 01/04 via AFAC.\nRatificação formal esperada para 60 dias após a última AGE (04/05)","next":"Regularização do AFAC\nIntegralização de ações","comments":""},{"id":"4.3","cat":"Daily Ops","title":"Make the Numbers","owner":"RB / JV","deadline":"—","status":"Em andamento","current":"Faturamento no mês de Junho: R$1.2m.\nFaturamento YTD: R$22.6m (vs R$54.2m em 2025), (Budget 2026 YTD - R$31.9m)\nEBITDA Abril: -R$18.1m\nDesempenho abaixo do esperado: conversão fraca, ciclos comerciais longos e ambiente competitivo mais agressivo.","next":"","comments":""},{"id":"4.6","cat":"Daily Ops","title":"Excelência Comercial","owner":"RB / JV","deadline":"Q1 2026","status":"Em andamento","current":"Novas campanhas comerciais em andamento.\nConversas foram iniciadas com o Feijoli para a elaboração de um dashboard semanal contendo informações comerciais.\nVisibilidade comercial significativamente melhorada com dados de vendas de 2026.","next":"Report comercial encaminhado pela Stracta","comments":""},{"id":"4.7","cat":"Daily Ops","title":"Consultorias — Revisão de Custos","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Escopo a ser alinhado em conjunto com o novo CEO, André","next":"Resposta a Integration a ser encaminhada, aguardando nova proposta","comments":""},{"id":"4.8","cat":"Daily Ops","title":"Mudança da Regulamentação","owner":"RB / JV / CTC","deadline":"—","status":"Em andamento","current":"Acompanhamento das Mudanças Regulatórias (ancorado à publicação do novo decreto pela ABBINS).","next":"Publicação do decreto entre Junho/Julho","comments":""},{"id":"4.9","cat":"Daily Ops","title":"AGO","owner":"Time Solubio","deadline":"—","status":"Em andamento","current":"Deve ser convocada para aprovar as DFs de 2025, deliberar sobre o resultado do exercício e eventuais eleições, com disponibilização prévia de documentos aos acionistas (30 dias).\n- As contas de 2023/24 ainda não foram formalmente aprovadas. A ausência de AGO não invalida as DFs, mas pode gerar questionamentos de credores/investidores e dificultar o registro de novos atos societários.","next":"DFs finalizadas, prazo legal para envio - final de abril","comments":""},{"id":"5.1","cat":"Project Fitbit","title":"Reestruturação da Dívida","owner":"TR / RB","deadline":"Q2 2026","status":"Em andamento","current":"Assembleia CRA IV realizada em 14/04 aprovou formalmente o reprofiling nos seguintes termos: (i) carência de juros de 1 ano (mai/26–abr/27), amortização de principal a partir de mai/29; (ii) extensão de vencimento para fev/2034; (iii) covenant DL/EBITDA suspenso até 2029, limitado a 3,5x em 2030 e 3,0x a partir de 2031; (iv) injeção obrigatória de R$45MM pelos acionistas até dez/2026, com inadimplemento constituindo evento de aceleração; (v) redução potencial de spread para 4,25% ou 3,25% condicionada a aportes acumulados de R$55MM ou R$65MM até dez/2027; (vi) waivers de cross-defaults, defaults financeiros e eventos de aceleração por Seller Finance até meados de 2029.\nPagamentos a acionistas e partes relacionadas proibidos até liquidação da parcela de mai/2029.\nTodas as emendas condicionadas à aprovação formal do BB até 13/07/2026 em termos não mais favoráveis que os do CRA.\nBB submetendo termos para aprovação interna final.","next":"","comments":"Validar minuta Capital de Giro, Camila - advogada - BB solicitou ok até o fim do mês\nAGE CRA IV agendada para 03/07"},{"id":"5.3","cat":"Project Fitbit","title":"Cautelar de Mediação","owner":"TR / RB","deadline":"Imediato","status":"Em andamento","current":"LLRR encaminhou minuta revisada.","next":"","comments":""},{"id":"5.4","cat":"Project Fitbit","title":"Seller Finance","owner":"TR / RB","deadline":"Imediato","status":"Em andamento","current":"Parcela devida em 28/03 (c. R$11.0m) não paga, com base nas cláusulas de estresse financeiro (Cláusula 7.6), ausência de reservas distribuíveis e covenants CRA IV.\nLaudo formal de estresse financeiro concluído e submetido.\nNotificação formal encaminhada aos acionistas minoritários; respostas enviadas conforme orientação jurídica.","next":"","comments":""},{"id":"7.1","cat":"Outros","title":"M&A Targets","owner":"RB / JV","deadline":"Q3 2026","status":"On Hold","current":"Larderello - player italiano focado em Specialty Chemicals, biostimulants and micronutrients\nPlayer Colombiano Buscando Investir em Fertilizantes - Proposta Jefferies\nBioAgro - Pipeline de produtos e portfólio atual solicitados por TR\nNova - empresa argentina de fertilizantes e biológicos\nICL","next":"","comments":"Empresas propostas: Bionat, Prime Agro, Kracht, Ubyfol, Allterra, Multitécnica, Oxiquímica, Superbac, Forquímica, Gênica, Agrivalle, AgroCP."},{"id":"7.2","cat":"Outros","title":"Novo Organograma da Plataforma","owner":"RH Aqua","deadline":"Q2 2026","status":"On Hold","current":"Desenhar novo organograma da plataforma.","next":"","comments":""},{"id":"7.3","cat":"Outros","title":"Dívida Itaú — Solutech","owner":"Ernesto / Evelin / JV","deadline":"Imediato","status":"Em andamento","current":"Pagamento realizado, robô em transferência para armazém Solubio","next":"Definir venda","comments":""},{"id":"7.5","cat":"Outros","title":"Internal Controls — Camila","owner":"Camila","deadline":"Imediato","status":"Em andamento","current":"Impressão geral positiva sobre o clima da companhia, o time contábil e a interação com P&D, embora essa área ainda demande maior estruturação e senioridade.\n- Os principais pontos de atenção estão no RH, em estresses operacionais entre áreas e na dependência da Evelin em relação ao Ernesto.\n- Potenciais oportunidades de revisão no modelo de PJs, na organização financeira para o carve-out e em rotinas operacionais das frentes financeira e fiscal.","next":"Foco Camila será direcionado para custos e compreensão de margens","comments":""},{"id":"NEW-1776110430240","cat":"Pessoas","title":"Vaga FP&A Garmin","owner":"Aqua Team","deadline":"Imediato","status":"On Hold","current":".","next":"","comments":""},{"id":"NEW-1776113236312","cat":"Daily Ops","title":"Elaboração chatbot AI","owner":"Aqua Team","deadline":"Imediato","status":"On Hold","current":"Entrada de Rodolfo, especialista de AI, deve auxiliar a guiar a elaboração do chatbot","next":"Definir próximos passos","comments":""},{"id":"NEW-1776113338093","cat":"Co-Investment","title":"Teaser","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Teaser em revisão. Discutir próximos passos com TR.","next":"","comments":""},{"id":"NEW-1777311220894","cat":"Societário","title":"Diluição Alber","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Alber sinalizou estar disposto a aceitar um reperfilamento de seu mútuo com acionistas por um período de 3 anos","next":"","comments":""},{"id":"NEW-1778521267573","cat":"Pessoas","title":"Renúncia Ernesto","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Principal ponto de atenção é o distrato e pagamentos anteriores realizados ao Ernesto","next":"Distrato Ernesto - quitações e SOP\nSOP - Carta Conforto e Offer Letter, que firmavam novo SOP, não foram assinadas. Último SOP foi pago na entrada do Aqua","comments":"Quitações - non solicite de 2 anos \n                      non compete de clientes e funcionários\n                      clausulas de confidencialidade\n                      quitação de salários\nSOP - entender em que pé estamos e qual o último documento assinado"},{"id":"NEW-1778521627601","cat":"Project Fitbit","title":"Bloqueio de caixa","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Ação extrajudicial, movida por Maurício, gerou bloqueio de caixa e retenção de valor em conta no BB","next":"","comments":""},{"id":"NEW-1778521781524","cat":"Bicycle","title":"Anexos Bicycle","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Anexos enviados","next":"Dinâmica de Royalties: Uma vez que optamos por não por mais nos contratos, e enquanto a dinâmica de royalties prevalecer, nada disso entra no P&L do Zem","comments":""},{"id":"NEW-1779732301009","cat":"Daily Ops","title":"KS","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Contração de linha de crédito junto a KS de R$10m aprovado em BoD, contratos em andamento","next":"Aguardando retorno KS","comments":""},{"id":"NEW-1779742881339","cat":"Daily Ops","title":"Negociação Solubio e Biovirtus","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Negociação entre as partes para acordo comercial","next":"Alinhamento a ser realizado junto a TZ","comments":""},{"id":"NEW-1779742918898","cat":"Daily Ops","title":"Negociação Solubio e Raix","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Reunião para negociação de acordo comercial realizada","next":"Discussões em andamento","comments":""},{"id":"NEW-1779742970643","cat":"Outros","title":"AGM","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Ensaio a ser realizado amanhã (16.06) às 11h30","next":"","comments":""},{"id":"NEW-1779743016078","cat":"Project Fitbit","title":"Postergação pagamento Black Partners","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Dívida será alongada por 30 dias, postergável por 30+30","next":"","comments":""},{"id":"NEW-1780346298357","cat":"Societário","title":"Assinatura Mauricio FCO","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Mauricio é o único acionista que não assinou documento do FCO. \nMauricio está solicitando uma garantia do Aqua para assinar documento do FCO, além de estar utilizando a discussão do Seller Finance como leverage de negociação","next":"Discussões sobre pagamento em andamento\nSolubio encaminhar resposta da contranotificação recebida, em elaboração pelo LLRR","comments":""},{"id":"NEW-1780948939628","cat":"Societário","title":"EFG","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Acordo para incorporação de 49% da EFG realizado, pagamento deve ser realizado em 15 parcelas de R$0.1m","next":"SPA aprovado e a ser encaminhado a contraparte","comments":""},{"id":"NEW-1780949206360","cat":"Pessoas","title":"Contrato Evelin","owner":"Time Solubio","deadline":"Imediato","status":"Em andamento","current":"Aditivo contrato Evelin","next":"Aguardar retorno de Evelin e Bichara","comments":""},{"id":"NEW-1781559810647","cat":"Pessoas","title":"Contrato André Martins","owner":"Aqua Team","deadline":"Imediato","status":"Em andamento","current":"Primeira versão realizada, em revisão interna","next":"","comments":""}];
+const DEFAULT_OVERVIEW={"kpis":[{"label":"FATURAMENTO YTD","value":"R$21.9m","sub":"vs R$54.2m em 2025","accent":"accent-teal"},{"label":"EBITDA April","value":"-R$18.1m","sub":"Budget: R$43.9m run rate","accent":"accent-navy"},{"label":"CAIXA ATUAL","value":"R$20.8m","sub":"Fornec. bloqueados: R$0.0m","accent":"accent-blue"},{"label":"BUDGET 2026","value":"R$43.9m","sub":"EBITDA Run Rate","accent":"accent-sky"}],"keyPriorities":[{"text":"Ratificar AFAC","cat":"Daily Ops"},{"text":"Bicycle — SHA e SPA","cat":"Bicycle"},{"text":"Oura — conclusão renegociação Integration","cat":"Daily Ops"},{"text":"Liquidez crítica — aguardar aprovação BB (prazo 13/07)","cat":"Project Fitbit"}],"headerDate":"15 JUNHO 2026"};
+
+let data=[],ovState=JSON.parse(JSON.stringify(DEFAULT_OVERVIEW));
+let activeCat="Overview",activeSt="Todos",viewingId=null;
+const STORAGE_KEY="solubio-weekly-update-state-v1";
+const GITHUB_CONFIG_KEY="solubio-weekly-update-github-v1";
+let globalSaveTimer=null;
+
+function clone(v){return JSON.parse(JSON.stringify(v));}
+function payload(){return {__items:data,__overview:ovState};}
+function applyPayload(rec){
+  if(rec&&Array.isArray(rec.__items))data=rec.__items;else data=clone(DEFAULT_DATA);
+  ovState=clone(DEFAULT_OVERVIEW);
+  if(rec&&rec.__overview)ovState=Object.assign(ovState,rec.__overview);
+}
+function loadLocalState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return null;
+    const rec=JSON.parse(raw);
+    return Array.isArray(rec.__items)?rec:null;
+  }catch(e){return null;}
+}
+function saveLocalState(showStatus=true){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload()));
+    if(showStatus)setSyncStatus("info","Rascunho local salvo");
+    return true;
+  }catch(e){
+    if(showStatus)setSyncStatus("info","Nao foi possivel salvar localmente");
+    return false;
+  }
+}
+function inferGithubConfig(){
+  const cfg={owner:"",repo:"",branch:"main",path:"data.json",token:""};
+  const host=location.hostname.toLowerCase();
+  if(host.endsWith(".github.io")){
+    const owner=host.split(".")[0];
+    const parts=location.pathname.split("/").filter(Boolean);
+    const repo=parts[0]||`${owner}.github.io`;
+    const dataPath=new URL("data.json",location.href).pathname.replace(/^\/+/,"");
+    cfg.owner=owner;cfg.repo=repo;
+    cfg.path=dataPath.startsWith(repo+"/")?dataPath.slice(repo.length+1):dataPath;
+  }
+  return cfg;
+}
+function loadGithubConfig(){
+  try{return Object.assign(inferGithubConfig(),JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY)||"{}"));}catch(e){return inferGithubConfig();}
+}
+function isGithubConfigReady(cfg){
+  return !!(cfg&&cfg.owner&&cfg.repo&&cfg.branch&&cfg.path&&cfg.token);
+}
+function saveGithubConfig(cfg){
+  localStorage.setItem(GITHUB_CONFIG_KEY,JSON.stringify(cfg));
+}
+function openGlobalConfig(){
+  const cfg=loadGithubConfig();
+  document.getElementById("g-owner").value=cfg.owner||"";
+  document.getElementById("g-repo").value=cfg.repo||"";
+  document.getElementById("g-branch").value=cfg.branch||"main";
+  document.getElementById("g-path").value=cfg.path||"data.json";
+  document.getElementById("g-token").value=cfg.token||"";
+  document.getElementById("global-overlay").style.display="flex";
+}
+function closeGlobalConfig(e){
+  if(e.target===document.getElementById("global-overlay"))document.getElementById("global-overlay").style.display="none";
+}
+function saveGlobalConfigFromForm(){
+  const cfg={
+    owner:document.getElementById("g-owner").value.trim(),
+    repo:document.getElementById("g-repo").value.trim(),
+    branch:document.getElementById("g-branch").value.trim()||"main",
+    path:document.getElementById("g-path").value.trim()||"data.json",
+    token:document.getElementById("g-token").value.trim()
+  };
+  saveGithubConfig(cfg);
+  document.getElementById("global-overlay").style.display="none";
+  saveGlobal();
+}
+function encodeGithubPath(path){
+  return String(path||"data.json").split("/").map(encodeURIComponent).join("/");
+}
+function githubContentUrl(cfg){
+  return `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodeGithubPath(cfg.path)}`;
+}
+function utf8ToBase64(str){
+  const bytes=new TextEncoder().encode(str);let bin="";
+  bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+async function githubError(res){
+  try{const j=await res.json();return j.message||`GitHub ${res.status}`;}catch(e){return `GitHub ${res.status}`;}
+}
+async function getGithubFileSha(cfg){
+  const r=await fetch(githubContentUrl(cfg)+"?ref="+encodeURIComponent(cfg.branch),{
+    headers:{Authorization:`Bearer ${cfg.token}`,Accept:"application/vnd.github+json"}
+  });
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error(await githubError(r));
+  const rec=await r.json();
+  return rec.sha||null;
+}
+async function saveGlobal(){
+  const cfg=loadGithubConfig();
+  if(!isGithubConfigReady(cfg)){
+    setSyncStatus("info","Configure o GitHub para salvar para todos");
+    openGlobalConfig();
+    return;
+  }
+  if(globalSaveTimer){clearTimeout(globalSaveTimer);globalSaveTimer=null;}
+  setSyncStatus("info","Salvando para todos...");
+  try{
+    const sha=await getGithubFileSha(cfg);
+    const body={
+      message:`Atualiza Solubio Weekly Update - ${new Date().toISOString()}`,
+      content:utf8ToBase64(JSON.stringify(payload(),null,2)+"\n"),
+      branch:cfg.branch
+    };
+    if(sha)body.sha=sha;
+    const r=await fetch(githubContentUrl(cfg),{
+      method:"PUT",
+      headers:{Authorization:`Bearer ${cfg.token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok)throw new Error(await githubError(r));
+    saveLocalState(false);
+    setSyncStatus("ok","Salvo para todos");
+  }catch(e){
+    console.error(e);
+    saveLocalState(false);
+    setSyncStatus("info","Falha ao salvar para todos");
+  }
+}
+function scheduleGlobalSave(){
+  const cfg=loadGithubConfig();
+  if(!isGithubConfigReady(cfg)){
+    setSyncStatus("info","Rascunho local - clique Salvar para todos");
+    return;
+  }
+  setSyncStatus("info","Salvando para todos...");
+  if(globalSaveTimer)clearTimeout(globalSaveTimer);
+  globalSaveTimer=setTimeout(saveGlobal,900);
+}
+function persistChange(){
+  saveLocalState(false);
+  scheduleGlobalSave();
+}
+
+// ── CARREGA data.json do repositório ─────────────────────────────────────────
+async function init(){
+  let loadedShared=false;
+  try{
+    const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
+    if(r.ok){
+      applyPayload(await r.json());
+      loadedShared=true;
+    }
+  }catch(e){}
+  if(!loadedShared){
+    const local=loadLocalState();
+    if(local){
+      applyPayload(local);
+      setSyncStatus("info","Rascunho local carregado");
+    }else{
+      applyPayload(null);
+    }
+  }
+  document.getElementById("date-display").textContent=ovState.headerDate;
+  document.getElementById("f-cat").innerHTML=CATS.map(c=>`<option>${c}</option>`).join("");
+  buildTabs();buildFilterBtns();setTab("Overview");
+}
+
+function setSyncStatus(type,msg){
+  const el=document.getElementById("sync-status");
+  const s={ok:"background:rgba(46,174,106,.15);color:#1A6B3C",info:"background:rgba(59,130,246,.15);color:#1D4ED8"};
+  el.style.cssText="font-size:11px;padding:5px 11px;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:5px;"+(s[type]||s.ok);
+  el.textContent=msg;
+}
+
+function exportJSON(){
+  const blob=new Blob([JSON.stringify({__items:data,__overview:ovState},null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="data.json";a.click();
+  setSyncStatus("info","⬇ Suba o data.json no GitHub");
+}
+
+function importJSON(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const rec=JSON.parse(ev.target.result);
+      applyPayload(rec);
+      document.getElementById("date-display").textContent=ovState.headerDate;
+      if(activeCat==="Overview")renderOverview();else render();
+      persistChange();
+    }catch(err){setSyncStatus("ok","⚠ JSON inválido");}
+  };
+  reader.readAsText(file);e.target.value="";
+}
+
+function toggleDateEdit(){
+  document.getElementById("date-wrap").style.display="none";
+  const w=document.getElementById("date-input-wrap");w.style.display="block";
+  const i=document.getElementById("date-input");i.value=ovState.headerDate;i.focus();i.select();
+}
+function saveDateEdit(){
+  const v=document.getElementById("date-input").value.trim();
+  if(v) ovState.headerDate=v.toUpperCase();
+  document.getElementById("date-display").textContent=ovState.headerDate;
+  document.getElementById("date-input-wrap").style.display="none";
+  document.getElementById("date-wrap").style.display="flex";
+  persistChange();
+}
+
+function buildTabs(){
+  document.getElementById("tabs-inner").innerHTML=["Overview",...CATS].map(c=>
+    `<button class="tab${c===activeCat?" active":""}" onclick="setTab('${c}')">${c}</button>`).join("");
+}
+function buildFilterBtns(){
+  document.getElementById("filter-btns").innerHTML=["Todos","Em andamento","Concluído","On Hold"].map(s=>{
+    const a=s===activeSt,m=STATUS_META[s];
+    return`<button class="fbtn" onclick="setSt('${s}')" style="background:${a?(m?m.dot:"#003D4C"):"#fff"};color:${a?"#fff":"#555"};border-color:${a?"transparent":"#CCD8DE"}">${s}</button>`;
+  }).join("");
+}
+function pill(st){const m=STATUS_META[st]||STATUS_META["Em andamento"];return`<span class="pill" style="background:${m.bg};color:${m.color};border:1px solid ${m.border}"><span class="pill-dot" style="background:${m.dot}"></span>${st}</span>`;}
+function setTab(c){
+  activeCat=c;buildTabs();
+  const ov=c==="Overview";
+  document.getElementById("overview-wrap").style.display=ov?"block":"none";
+  document.getElementById("grid-wrap").style.display=ov?"none":"block";
+  document.getElementById("filters").style.display=ov?"none":"flex";
+  document.getElementById("btn-new").style.display=ov?"none":"";
+  document.getElementById("export-hint").style.display=ov?"block":"none";
+  ov?renderOverview():render();
+}
+function setSt(s){activeSt=s;buildFilterBtns();render();}
+
+function renderOverview(){
+  document.getElementById("s-total").textContent=data.length;
+  document.getElementById("s-and").textContent=data.filter(d=>d.status==="Em andamento").length;
+  document.getElementById("s-conc").textContent=data.filter(d=>d.status==="Concluído").length;
+  document.getElementById("s-hold").textContent=data.filter(d=>d.status==="On Hold").length;
+  document.getElementById("kpi-grid").innerHTML=ovState.kpis.map((k,i)=>`
+    <div class="kpi-card ${k.accent}">
+      <span class="kpi-edit-hint">clique para editar</span>
+      <div class="kpi-label" contenteditable="true" onblur="ovState.kpis[${i}].label=this.textContent.trim();persistChange()">${esc(k.label)}</div>
+      <div class="kpi-value-wrap"><div class="kpi-value" contenteditable="true" onblur="ovState.kpis[${i}].value=this.textContent.trim();persistChange()">${esc(k.value)}</div></div>
+      <div class="kpi-sub" contenteditable="true" onblur="ovState.kpis[${i}].sub=this.textContent.trim();persistChange()">${esc(k.sub)}</div>
+    </div>`).join("");
+  renderPriorityList();renderCatProgress();
+}
+function renderCatProgress(){
+  const ac=new Set(ovState.keyPriorities.map(p=>typeof p==="string"?null:p.cat).filter(Boolean));
+  document.getElementById("cat-progress").innerHTML=CATS.map(cat=>{
+    const items=data.filter(d=>d.cat===cat);if(!items.length)return"";
+    const done=items.filter(d=>d.status==="Concluído").length;
+    const pct=Math.round(done/items.length*100);
+    return`<div class="cat-progress-item${ac.has(cat)?" has-priority":""}">
+      <div class="cat-progress-header"><span class="cat-progress-name">${ac.has(cat)?'<span class="cat-priority-dot"></span>':""} ${cat}</span><span class="cat-progress-counts">${done}/${items.length} concluídos</span></div>
+      <div class="cat-progress-bar"><div class="cat-progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join("");
+}
+function renderPriorityList(){
+  document.getElementById("key-priorities-grid").innerHTML=ovState.keyPriorities.map((p,i)=>`
+    <div class="priority-item">
+      <div class="priority-num">${i+1}</div>
+      <div class="priority-text" contenteditable="true" onblur="savePriorityText(${i},this.textContent)">${esc(p.text||p)}</div>
+      <select class="priority-cat-select" onchange="savePriorityCat(${i},this.value)">
+        <option value="">— cat</option>
+        ${CATS.map(c=>`<option value="${c}"${(p.cat||"")==c?" selected":""}>${c}</option>`).join("")}
+      </select>
+      <button class="priority-del" onclick="deletePriority(${i})">✕</button>
+    </div>`).join("");
+}
+function savePriorityText(i,v){if(typeof ovState.keyPriorities[i]==="string")ovState.keyPriorities[i]={text:v.trim(),cat:""};else ovState.keyPriorities[i].text=v.trim();persistChange();renderCatProgress();}
+function savePriorityCat(i,v){if(typeof ovState.keyPriorities[i]==="string")ovState.keyPriorities[i]={text:ovState.keyPriorities[i],cat:v};else ovState.keyPriorities[i].cat=v;persistChange();renderCatProgress();}
+function addPriority(){ovState.keyPriorities.push({text:"Nova prioridade",cat:""});persistChange();renderOverview();setTimeout(()=>{const items=document.getElementById("key-priorities-grid").querySelectorAll(".priority-text");if(items.length){items[items.length-1].focus();document.execCommand("selectAll");}},50);}
+function deletePriority(i){ovState.keyPriorities.splice(i,1);persistChange();renderOverview();}
+
+function render(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  const filtered=data.filter(d=>d.cat===activeCat&&(activeSt==="Todos"||d.status===activeSt)&&(!q||[d.title,d.owner,d.current].join(" ").toLowerCase().includes(q)));
+  document.getElementById("s-total").textContent=data.length;
+  document.getElementById("s-and").textContent=data.filter(d=>d.status==="Em andamento").length;
+  document.getElementById("s-conc").textContent=data.filter(d=>d.status==="Concluído").length;
+  document.getElementById("s-hold").textContent=data.filter(d=>d.status==="On Hold").length;
+  document.getElementById("count").textContent=filtered.length+" itens";
+  document.getElementById("grid").innerHTML=filtered.map(item=>`
+    <div class="card" onclick="openView('${item.id.replace(/'/g,"\\'")}')">
+      <div class="card-top">
+        <div class="card-meta"><span class="card-cat">${esc(item.cat)}</span>${pill(item.status)}</div>
+        <div class="card-title">${esc(item.title)}</div>
+        <div class="card-current">${esc(item.current)}</div>
+      </div>
+      ${item.next?`<div class="card-next"><div class="card-next-lbl">Next step</div><div class="card-next-txt">${esc(item.next)}</div></div>`:""}
+      <div class="card-foot">
+        <span class="card-owner">${esc(item.owner)}</span>
+        <div class="card-foot-right"><span class="deadline-badge">${esc(item.deadline)}</span><button class="edit-btn" onclick="event.stopPropagation();openEdit('${item.id.replace(/'/g,"\\'")}')">Editar</button></div>
+      </div>
+    </div>`).join("");
+}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function openView(id){
+  viewingId=id;const d=data.find(x=>x.id===id);if(!d)return;
+  document.getElementById("v-cat").textContent=d.cat;document.getElementById("v-id").textContent="#"+d.id;
+  document.getElementById("v-pill").innerHTML=pill(d.status);document.getElementById("v-title").textContent=d.title;
+  document.getElementById("v-owner").textContent=d.owner;document.getElementById("v-deadline").textContent=d.deadline;
+  document.getElementById("v-current").textContent=d.current;
+  const nw=document.getElementById("v-next-wrap"),cw=document.getElementById("v-comments-wrap");
+  if(d.next){document.getElementById("v-next").textContent=d.next;nw.style.display="";}else{nw.style.display="none";}
+  if(d.comments){document.getElementById("v-comments").textContent=d.comments;cw.style.display="";}else{cw.style.display="none";}
+  document.getElementById("view-overlay").style.display="flex";
+}
+function closeView(e){if(e.target===document.getElementById("view-overlay"))document.getElementById("view-overlay").style.display="none";}
+function openEditFromView(){document.getElementById("view-overlay").style.display="none";openEdit(viewingId);}
+function openNew(){
+  document.getElementById("form-title-lbl").textContent="Novo item";
+  document.getElementById("f-id").value="NEW-"+Date.now();
+  ["f-title","f-owner","f-current","f-next","f-comments"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-cat").value=activeCat!=="Overview"?activeCat:CATS[0];
+  document.getElementById("f-status").value="Em andamento";document.getElementById("f-deadline").value="Imediato";
+  updateSaveBtn();document.getElementById("edit-overlay").style.display="flex";
+}
+function openEdit(id){
+  const d=data.find(x=>x.id===id);if(!d)return;
+  document.getElementById("form-title-lbl").textContent="Editar item";
+  document.getElementById("f-id").value=d.id;document.getElementById("f-title").value=d.title;
+  document.getElementById("f-cat").value=d.cat;document.getElementById("f-status").value=d.status;
+  document.getElementById("f-owner").value=d.owner;document.getElementById("f-deadline").value=d.deadline;
+  document.getElementById("f-current").value=d.current;document.getElementById("f-next").value=d.next||"";
+  document.getElementById("f-comments").value=d.comments||"";
+  updateSaveBtn();document.getElementById("edit-overlay").style.display="flex";
+}
+function updateSaveBtn(){
+  const ok=document.getElementById("f-title").value.trim()&&document.getElementById("f-owner").value.trim()&&document.getElementById("f-current").value.trim();
+  const btn=document.getElementById("btn-save");btn.style.background=ok?"#003D4C":"#CCD8DE";btn.style.cursor=ok?"pointer":"not-allowed";
+}
+document.addEventListener("input",e=>{if(["f-title","f-owner","f-current"].includes(e.target.id))updateSaveBtn();});
+function saveItem(){
+  const id=document.getElementById("f-id").value;
+  const form={id,cat:document.getElementById("f-cat").value,title:document.getElementById("f-title").value.trim(),owner:document.getElementById("f-owner").value.trim(),deadline:document.getElementById("f-deadline").value.trim()||"Imediato",status:document.getElementById("f-status").value,current:document.getElementById("f-current").value.trim(),next:document.getElementById("f-next").value.trim(),comments:document.getElementById("f-comments").value.trim()};
+  if(!form.title||!form.owner||!form.current)return;
+  const idx=data.findIndex(d=>d.id===id);if(idx>=0)data[idx]=form;else data.push(form);
+  document.getElementById("edit-overlay").style.display="none";
+  if(activeCat==="Overview")renderOverview();else render();
+  persistChange();
+}
+function confirmDelete(){document.getElementById("view-overlay").style.display="none";document.getElementById("confirm-overlay").style.display="flex";}
+function closeConfirm(e){if(e.target===document.getElementById("confirm-overlay"))document.getElementById("confirm-overlay").style.display="none";}
+function deleteItem(){
+  data=data.filter(d=>d.id!==viewingId);
+  document.getElementById("confirm-overlay").style.display="none";
+  if(activeCat==="Overview")renderOverview();else render();
+  persistChange();
+}
+init();
+</script>
+</body>
+</html>
+
