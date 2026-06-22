@@ -395,6 +395,17 @@
       "current": "Contrato finalizado",
       "next": "clausulas de SOP a ser acessadas",
       "comments": ""
+    },
+    {
+      "id": "NEW-1782161638149",
+      "cat": "Bicycle",
+      "title": "Mútuo para conta US do AZ",
+      "owner": "Aqua Team",
+      "deadline": "Imediato",
+      "status": "Em andamento",
+      "current": "Call realizado na última semana com CMC para que eles possam elaborar minuta para realização de aporte de capital",
+      "next": "Envio deve ser feito essa semana",
+      "comments": ""
     }
   ],
   "__overview": {
