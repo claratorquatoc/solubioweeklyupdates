@@ -62,7 +62,7 @@
       "owner": "RB / VMR",
       "deadline": "—",
       "status": "Em andamento",
-      "current": "Caixa em 27/07: R$27.1m \nFornecedores bloqueados: R$0m",
+      "current": "Caixa em 24/07: R$27.2m \nFornecedores bloqueados: R$0m",
       "next": "",
       "comments": ""
     },
@@ -84,7 +84,7 @@
       "owner": "RB / JV",
       "deadline": "—",
       "status": "Em andamento",
-      "current": "Faturamento no mês de Julho: R$3.4m.\nFaturamento YTD: R$34.0m (vs R$65.0m em 2025), (Budget 2026 YTD - R$38.0m)\nEBITDA Maio: -R$23.4m\nDesempenho abaixo do esperado: conversão fraca, ciclos comerciais longos e ambiente competitivo mais agressivo.",
+      "current": "Faturamento no mês de Julho: R$2.6m.\nFaturamento YTD: R$33.2m (vs R$65.0m em 2025), (Budget 2026 YTD - R$38.0m)\nEBITDA Maio: -R$23.4m\nDesempenho abaixo do esperado: conversão fraca, ciclos comerciais longos e ambiente competitivo mais agressivo.",
       "next": "",
       "comments": ""
     },
@@ -478,7 +478,7 @@
     "kpis": [
       {
         "label": "FATURAMENTO YTD",
-        "value": "R$34.0m",
+        "value": "R$33.2m",
         "sub": "vs R$65.0m em 2025",
         "accent": "accent-teal"
       },
@@ -490,7 +490,7 @@
       },
       {
         "label": "CAIXA ATUAL",
-        "value": "R$27.1m",
+        "value": "R$27.2m",
         "sub": "Fornec. bloqueados: R$0.0m",
         "accent": "accent-blue"
       },
@@ -515,6 +515,6 @@
         "cat": "Project Fitbit"
       }
     ],
-    "headerDate": "27 DE JULHO 2026"
+    "headerDate": "28 DE JULHO 2026"
   }
 }
