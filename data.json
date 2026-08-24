@@ -461,6 +461,17 @@
       "current": "Definir se contrataremos o serviço de P&D externo ofertado pela HMS Agroscience",
       "next": "",
       "comments": ""
+    },
+    {
+      "id": "NEW-1787596320545",
+      "cat": "Bicycle",
+      "title": "Fees CMC",
+      "owner": "Aqua team",
+      "deadline": "Imediato",
+      "status": "Em andamento",
+      "current": "Definição dos fees a serem pagos pela Solubio ao CMC, rateio serviços de PMO e Bicycle",
+      "next": "",
+      "comments": ""
     }
   ],
   "__overview": {
