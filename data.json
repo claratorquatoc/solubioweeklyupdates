@@ -538,6 +538,17 @@
       "current": "xx",
       "next": "",
       "comments": ""
+    },
+    {
+      "id": "NEW-1788290486169",
+      "cat": "Daily Ops",
+      "title": "TMS próprio Solubio",
+      "owner": "João Schiavo",
+      "deadline": "Imediato",
+      "status": "Em andamento",
+      "current": "Desenvolvimento TMS próprio",
+      "next": "",
+      "comments": ""
     }
   ],
   "__overview": {
